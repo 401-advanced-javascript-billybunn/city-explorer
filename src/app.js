@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 
 import Header from './components/header.js';
 import SearchForm from './components/search-form.js';
@@ -28,29 +28,40 @@ class App extends React.Component {
             time: 'Monday at 1PM',
             forecast: 'cloudy with a chance of meatballs'
           }
-        ]
-      },
-      yelp: [
-        {
-          url: 'www.some-restaurant.com',
-          name: 'Restaurant Name',
-          rating: '4',
-          price: '10.00',
-          image_url: 'placehold.it/200'
-        },
-        {
-          url: 'www.some-restaurant.com',
-          name: 'Restaurant Name',
-          rating: '4',
-          price: '10.00',
-          image_url: 'placehold.it/200'
-        }
-      ]
+        ],
 
+        yelp: [
+          {
+            url: 'www.some-restaurant.com',
+            name: 'Wild Ginger',
+            rating: '4',
+            price: '10.00',
+            image_url: 'placehold.it/200'
+          },
+          {
+            url: 'www.some-restaurant.com',
+            name: 'Code FEllows Cafe',
+            rating: '4',
+            price: '10.00',
+            image_url: 'placehold.it/200'
+          }
+        ]
+      }
     };
   }
 
+  renderColumns() {
+    Object.keys(this.state.data).map((type, idx) => {
+      console.log(type, this.state.data[type]);
+      return (
+        <Column key={idx} type={type} data={this.state.data[type]} />
+      );
+
+    });
+  }
+
   render() {
+    // this.renderColumns(this.state.data);
     return (
       <>
         <Header />
@@ -60,8 +71,13 @@ class App extends React.Component {
           <Error />
           <h2 className="query-placeholder">Here are the results for {this.state.query}</h2>
           <div className="column-container hide">
-            <Column data={this.state.data.weather}>Results from the Dark Sky API</Column>
-            {/* <Column data={this.state.data.yelp}>Results from the Yelp API</Column> */}
+            {Object.keys(this.state.data).map((type, idx) => {
+              console.log(type, this.state.data[type]);
+              return (
+                <Column key={idx} type={type} data={this.state.data[type]} />
+              );
+
+            })}
           </div>
         </main>
         <footer></footer>

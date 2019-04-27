@@ -1,14 +1,13 @@
 import React, { Suspense } from 'react';
-
-// import Details from './column-details/weather-details.js';
-const Details = React.lazy(() => import('./column-details/weather-details.js'));
-
+// https://reactjs.org/docs/code-splitting.html
 
 function Column(props) {
-  console.log(props.data);
+  console.log('column.js')
+  const type = props.type;
+  const Details = React.lazy(() => import(`./column-details/${type}-details.js`));
+
   return (
     <section>
-      <h3>{props.children}</h3>
       <Suspense fallback={<div>Loading...</div>}>
         <Details data={props.data} />
       </Suspense>
