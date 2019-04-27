@@ -36,23 +36,52 @@ class App extends React.Component {
             name: 'Wild Ginger',
             rating: '4',
             price: '10.00',
-            image_url: 'placehold.it/200'
+            image_url: 'https://via.placeholder.com/150'
           },
           {
             url: 'www.some-restaurant.com',
             name: 'Code FEllows Cafe',
             rating: '4',
             price: '10.00',
-            image_url: 'placehold.it/200'
+            image_url: 'https://via.placeholder.com/150'
           }
-        ]
+        ],
+        meetup: [{
+          link: 'www.google.com',
+          name: 'Partner power hour at cf',
+          host: 'Code Fellows is hosting',
+          creation_date: 'mar 6, 1993'
+        },
+        {
+          link: 'www.google.com',
+          name: 'community hackathon',
+          host: 'Code Fellows is hosting',
+          creation_date: '4/5/2998'
+        }],
+        movie: [{
+          title: 'The Avengers',
+          released_on: 'April 26, 2019',
+          total_votes: '10,000,000',
+          average_votes: '9',
+          popularity: '99%',
+          image_url: 'https://via.placeholder.com/250',
+          overview: 'This was a great movie. Go see it! This is a very short overview of the movie.'
+        },
+        {
+          title: 'The Code Fellows Movie',
+          released_on: 'April 26, 2019',
+          total_votes: '10,000,000',
+          average_votes: '9',
+          popularity: '99%',
+          image_url: 'https://via.placeholder.com/250',
+          overview: 'This was a great movie. Go see it! This is a very short overview of the movie.'
+        }]
       }
     };
   }
 
   renderColumns() {
     Object.keys(this.state.data).map((type, idx) => {
-      console.log(type, this.state.data[type]);
       return (
         <Column key={idx} type={type} data={this.state.data[type]} />
       );
@@ -71,13 +100,7 @@ class App extends React.Component {
           <Error />
           <h2 className="query-placeholder">Here are the results for {this.state.query}</h2>
           <div className="column-container hide">
-            {Object.keys(this.state.data).map((type, idx) => {
-              console.log(type, this.state.data[type]);
-              return (
-                <Column key={idx} type={type} data={this.state.data[type]} />
-              );
-
-            })}
+            {Object.keys(this.state.data).map((type, idx) => <Column key={idx} type={type} data={this.state.data[type]} />)}
           </div>
         </main>
         <footer></footer>
