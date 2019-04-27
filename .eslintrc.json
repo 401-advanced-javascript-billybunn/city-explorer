@@ -29,7 +29,13 @@
     "react/prop-types": [0],
     "quotes": ["error", "single", { "allowTemplateLiterals": true }],
     "space-infix-ops": ["error", {"int32Hint": false}],
-    "comma-dangle": ["error", "always-multiline"],
+    "comma-dangle": ["error", {
+      "arrays": "never",
+      "objects": "only-multiline",
+      "imports": "never",
+      "exports": "never",
+      "functions": "ignore"
+  }],
     "semi": [ "error", "always" ]
   },
   "plugins": ["react"]

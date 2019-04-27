@@ -1,0 +1,23 @@
+// Workspace settings
+{
+  // The following will hide certain files in the editor
+  "files.exclude": {
+    "**/node_modules": true, // node modules folder
+    "**/.eslintignore": true,
+    // "**/.eslintrc.json": true,
+    "**/.gitattributes": true,
+    "**/.gitignore": true,
+    "**/.sonarcloud.properties": true,
+    "**/sonar-project.properties":true,
+    "**/.travis.yml": true,
+    "**/coverage":true, // coverage folder made by jest
+    "**/LICENSE": true, // the license
+    "**/package-lock.json": true, // package-lock.json
+    "**/.babelrc": true,
+    "**/webpack.common.js": true,
+    "**/webpack.dev.js": true,
+    "**/webpack.prod.js": true,
+    "**/yarn.lock": true,
+    // "**/.**": true, // files starting with "."
+  }
+}
