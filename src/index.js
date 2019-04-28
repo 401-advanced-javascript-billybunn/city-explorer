@@ -6,5 +6,4 @@ function Main() {
   return <App />;
 }
 
-
 ReactDOM.render(<Main />, document.getElementById('root'));
