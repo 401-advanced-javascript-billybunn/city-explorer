@@ -1,7 +1,6 @@
 import React from 'react';
 
 function YelpDetails(props) {
-  console.log('yup');
   return (
     <>
     <h3>Results from the Yelp API</h3>

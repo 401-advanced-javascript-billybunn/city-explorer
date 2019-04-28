@@ -1,7 +1,6 @@
 import React from 'react';
 
 function MeetupDetails(props) {
-  console.log('yup');
   return (
     <>
       <h3>Results from the Meetup API</h3>

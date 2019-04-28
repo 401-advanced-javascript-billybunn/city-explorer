@@ -75,7 +75,33 @@ class App extends React.Component {
           popularity: '99%',
           image_url: 'https://via.placeholder.com/250',
           overview: 'This was a great movie. Go see it! This is a very short overview of the movie.'
-        }]
+        }],
+        trail: [
+          {
+            trail_url: 'www.trail.com',
+            name: 'Poopoo Point',
+            location: 'Seattle WA area',
+            length: '800 miles',
+            condition_date: 'April 25, 2019',
+            condition_time: '1PM',
+            conditions: 'Cold and rainy',
+            stars: '8000',
+            start_votes: '10,000',
+            summary: 'This is a great hike. But its all up-hill, BOTH ways. How is that even possible?!'
+          },
+          {
+            trail_url: 'www.trail.com',
+            name: 'Mount Si',
+            location: 'Seattle WA area',
+            length: '800 miles',
+            condition_date: 'April 25, 2019',
+            condition_time: '1PM',
+            conditions: 'Cold and rainy',
+            stars: '8000',
+            start_votes: '10,000',
+            summary: 'This is a great hike. But its all up-hill, BOTH ways. How is that even possible?!'
+          }
+        ]
       }
     };
   }
