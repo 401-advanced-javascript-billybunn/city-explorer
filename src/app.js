@@ -5,16 +5,18 @@ import URLForm from './components/url-form.js';
 import SearchForm from './components/search-form.js';
 import Map from './components/map.js';
 import Error from './components/error.js';
-import Column from './components/column.js';
-import fetchCityData from './api-handler.js';
+import QueryPlaceholder from './components/query-placeholder.js';
+import ColumnContainer from './components/column-container.js';
+import { getLocation, mapURL } from './fetcher.js';
 
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      before: false,
+      initialView: true,
       query: 'Seattle, WA, USA',
+      map_url: 'https://via.placeholder.com/600x300',
       data: {
         weather: [
           {
@@ -105,20 +107,32 @@ class App extends React.Component {
         ]
       }
     };
-    this.columnClasses = `column-container ${this.state.before ? 'hide' : ''}`;
-    this.queryPlaceholderClasses = `query-placeholder ${this.state.before ? 'hide' : ''}`;
-    this.renderColumns = () => {
-      Object.keys(this.state.data).map((type, idx) => <Column key={idx} type={type} data={this.state.data[type]} />);
-    };
   }
 
-  handleSubmit = (query) => {
-    this.setState({query});
-    fetchCityData(query);
-      // .then(data => this.setState({data}))
-      // .catch(err => console.err('ERROR in fetchCityData'))
-  }
+  // renderColumns = () => {
+  //   Object.keys(this.state.data).map((type, idx) => <Column key={idx} type={type} data={this.state.data[type]} />);
+  // };
 
+  handleSubmit = async (query) => {
+    // get lat, long, & formatted query from Google geocode API
+    let location = await getLocation(query);
+    console.log('location in app.js', location);
+
+    // Update the "here are the results for __" and map in the DOM
+    this.setState({
+      initialView: false,
+      query: location.formatted_query,
+      map_url: mapURL(location)
+    });
+
+    console.log(this.state);
+
+
+    // this.setState({map_url: mapURL(location)});
+
+    // .then(data => this.setState({data}))
+    // .catch(err => console.err('ERROR in fetchCityData'))
+  }
 
 
   render() {
@@ -129,12 +143,10 @@ class App extends React.Component {
         <main>
           <URLForm />
           <SearchForm handleQuery={this.handleSubmit} />
-          <Map hide={this.state.before} />
+          <Map hide={this.state.initialView} url={this.state.map_url} />
           <Error />
-          <h2 className={this.queryPlaceholderClasses}>Here are the results for {this.state.query}</h2>
-          <div className={this.columnClasses}>
-            {Object.keys(this.state.data).map((type, idx) => <Column key={idx} type={type} data={this.state.data[type]} />)}
-          </div>
+          <QueryPlaceholder hide={this.state.initialView} query={this.state.query} />
+          <ColumnContainer hide={this.state.initialView} data={this.state.data} />
         </main>
         <footer></footer>
       </>
