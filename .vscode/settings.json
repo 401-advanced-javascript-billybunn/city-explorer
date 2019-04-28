@@ -6,7 +6,7 @@
     "**/.eslintignore": true,
     // "**/.eslintrc.json": true,
     "**/.gitattributes": true,
-    "**/.gitignore": true,
+    // "**/.gitignore": true,
     "**/.sonarcloud.properties": true,
     "**/sonar-project.properties":true,
     "**/.travis.yml": true,
