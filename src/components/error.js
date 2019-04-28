@@ -1,7 +1,7 @@
 import React from 'react';
 
-function Error() {
-  return <section className="error-container"></section>
-};
+function Error(props) {
+  return <section className="error-container">{props.children}</section>;
+}
 
 export default Error;

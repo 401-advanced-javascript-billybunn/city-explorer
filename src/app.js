@@ -15,118 +15,39 @@ class App extends React.Component {
     super(props);
     this.state = {
       initialView: true,
-      query: 'Seattle, WA, USA',
+      errorMessage: null,
+      query: null,
       map_url: 'https://via.placeholder.com/600x300',
-      data: {
-        weather: [
-          {
-            time: 'Saturday at 10PM',
-            forecast: 'cloudy with a chance of meatballs'
-          },
-          {
-            time: 'Sunday at 1PM',
-            forecast: 'cloudy with a chance of meatballs'
-          },
-          {
-            time: 'Monday at 1PM',
-            forecast: 'cloudy with a chance of meatballs'
-          }
-        ],
-        yelp: [
-          {
-            url: 'www.some-restaurant.com',
-            name: 'Wild Ginger',
-            rating: '4',
-            price: '10.00',
-            image_url: 'https://via.placeholder.com/150'
-          },
-          {
-            url: 'www.some-restaurant.com',
-            name: 'Code FEllows Cafe',
-            rating: '4',
-            price: '10.00',
-            image_url: 'https://via.placeholder.com/150'
-          }
-        ],
-        meetups: [
-          {
-            link: 'www.google.com',
-            name: 'Partner power hour at cf',
-            host: 'Code Fellows is hosting',
-            creation_date: 'mar 6, 1993'
-          },
-          {
-            link: 'www.google.com',
-            name: 'community hackathon',
-            host: 'Code Fellows is hosting',
-            creation_date: '4/5/2998'
-          }],
-        movies: [
-          {
-            title: 'The Avengers',
-            released_on: 'April 26, 2019',
-            total_votes: '10,000,000',
-            average_votes: '9',
-            popularity: '99%',
-            image_url: 'https://via.placeholder.com/250',
-            overview: 'This was a great movie. Go see it! This is a very short overview of the movie.'
-          },
-          {
-            title: 'The Code Fellows Movie',
-            released_on: 'April 26, 2019',
-            total_votes: '10,000,000',
-            average_votes: '9',
-            popularity: '99%',
-            image_url: 'https://via.placeholder.com/250',
-            overview: 'This was a great movie. Go see it! This is a very short overview of the movie.'
-          }],
-        trails: [
-          {
-            trail_url: 'www.trail.com',
-            name: 'Poopoo Point',
-            location: 'Seattle WA area',
-            length: '800 miles',
-            condition_date: 'April 25, 2019',
-            condition_time: '1PM',
-            conditions: 'Cold and rainy',
-            stars: '8000',
-            start_votes: '10,000',
-            summary: 'This is a great hike. But its all up-hill, BOTH ways. How is that even possible?!'
-          },
-          {
-            trail_url: 'www.trail.com',
-            name: 'Mount Si',
-            location: 'Seattle WA area',
-            length: '800 miles',
-            condition_date: 'April 25, 2019',
-            condition_time: '1PM',
-            conditions: 'Cold and rainy',
-            stars: '8000',
-            start_votes: '10,000',
-            summary: 'This is a great hike. But its all up-hill, BOTH ways. How is that even possible?!'
-          }
-        ]
-      }
+      data: {}
     };
   }
 
+  handleError = (errorMessage) => this.setState({ errorMessage });
+
+  resetError = () => this.setState({errorMessage: null});
+
   newSearch = async (query) => {
-    // Get lat, long, & formatted query from Google geocode API
-    let location = await fetchLocation(query);
+    this.resetError();
+    try {
+      // Get lat, long, & formatted query from Google geocode API
+      let location = await fetchLocation(query);
 
-    // Update state for map and "here are the results for ____"
-    this.setState({
-      initialView: false,
-      query: location.formatted_query,
-      map_url: mapURL(location)
-    });
+      // Update state for map and "here are the results for ____"
+      this.setState({
+        initialView: false,
+        query: location.formatted_query,
+        map_url: mapURL(location)
+      });
 
-    // Send all the requests out to the 3rd-party APIs
-    let data = await fetchResources(location);
+      // Send all the requests out to the 3rd-party APIs
+      let data = await fetchResources(location);
 
-    // Update state with new data from 3rd-party APIs
-    this.setState({data});
-  }
+      // Update state with new data from 3rd-party APIs
+      this.setState({ data });
+    } catch (err) {
+      this.handleError(err.message);
+    }
+  };
 
   render() {
     return (
@@ -136,14 +57,14 @@ class App extends React.Component {
           <URLForm />
           <SearchForm returnQuery={this.newSearch} />
           <Map hide={this.state.initialView} url={this.state.map_url} />
-          <Error />
+          <Error>{this.state.errorMessage}</Error>
           <QueryPlaceholder hide={this.state.initialView} query={this.state.query} />
           <ColumnContainer hide={this.state.initialView} data={this.state.data} />
         </main>
         <footer></footer>
       </>
     );
-  }
+  };
 }
 
 export default App;
