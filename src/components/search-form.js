@@ -7,7 +7,7 @@ function SearchForm() {
       <input type="text" name="search" id="input-search" placeholder="Enter a location here" />
       <button type="submit">Explore!</button>
     </form>
-  )
+  );
 }
 
 export default SearchForm;

@@ -1,18 +1,20 @@
 import React from 'react';
 
 import Header from './components/header.js';
+import URLForm from './components/url-form.js';
 import SearchForm from './components/search-form.js';
 import Map from './components/map.js';
 import Error from './components/error.js';
 import Column from './components/column.js';
 // import WeatherDetails from './components/column-details/weather-details.js';
 
-
+// import './design/styles.css';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      before: true,
       query: 'Seattle, WA, USA',
       data: {
         weather: [
@@ -104,6 +106,8 @@ class App extends React.Component {
         ]
       }
     };
+    this.columnClasses = `column-container ${this.state.before ? 'hide' : ''}`;
+    this.queryPlaceholderClasses = `query-placeholder ${this.state.before ? 'hide' : ''}`;
   }
 
   renderColumns() {
@@ -121,11 +125,12 @@ class App extends React.Component {
       <>
         <Header />
         <main>
+          <URLForm />
           <SearchForm />
-          <Map />
+          <Map hide={this.state.before} />
           <Error />
-          <h2 className="query-placeholder">Here are the results for {this.state.query}</h2>
-          <div className="column-container hide">
+          <h2 className={this.queryPlaceholderClasses}>Here are the results for {this.state.query}</h2>
+          <div className={this.columnClasses}>
             {Object.keys(this.state.data).map((type, idx) => <Column key={idx} type={type} data={this.state.data[type]} />)}
           </div>
         </main>
