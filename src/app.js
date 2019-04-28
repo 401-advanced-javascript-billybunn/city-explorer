@@ -7,7 +7,7 @@ import Map from './components/map.js';
 import Error from './components/error.js';
 import QueryPlaceholder from './components/query-placeholder.js';
 import ColumnContainer from './components/column-container.js';
-import { getLocation, mapURL } from './fetcher.js';
+import { fetchLocation, mapURL, fetchResources } from './fetcher.js';
 
 
 class App extends React.Component {
@@ -32,7 +32,6 @@ class App extends React.Component {
             forecast: 'cloudy with a chance of meatballs'
           }
         ],
-
         yelp: [
           {
             url: 'www.some-restaurant.com',
@@ -49,37 +48,39 @@ class App extends React.Component {
             image_url: 'https://via.placeholder.com/150'
           }
         ],
-        meetup: [{
-          link: 'www.google.com',
-          name: 'Partner power hour at cf',
-          host: 'Code Fellows is hosting',
-          creation_date: 'mar 6, 1993'
-        },
-        {
-          link: 'www.google.com',
-          name: 'community hackathon',
-          host: 'Code Fellows is hosting',
-          creation_date: '4/5/2998'
-        }],
-        movie: [{
-          title: 'The Avengers',
-          released_on: 'April 26, 2019',
-          total_votes: '10,000,000',
-          average_votes: '9',
-          popularity: '99%',
-          image_url: 'https://via.placeholder.com/250',
-          overview: 'This was a great movie. Go see it! This is a very short overview of the movie.'
-        },
-        {
-          title: 'The Code Fellows Movie',
-          released_on: 'April 26, 2019',
-          total_votes: '10,000,000',
-          average_votes: '9',
-          popularity: '99%',
-          image_url: 'https://via.placeholder.com/250',
-          overview: 'This was a great movie. Go see it! This is a very short overview of the movie.'
-        }],
-        trail: [
+        meetups: [
+          {
+            link: 'www.google.com',
+            name: 'Partner power hour at cf',
+            host: 'Code Fellows is hosting',
+            creation_date: 'mar 6, 1993'
+          },
+          {
+            link: 'www.google.com',
+            name: 'community hackathon',
+            host: 'Code Fellows is hosting',
+            creation_date: '4/5/2998'
+          }],
+        movies: [
+          {
+            title: 'The Avengers',
+            released_on: 'April 26, 2019',
+            total_votes: '10,000,000',
+            average_votes: '9',
+            popularity: '99%',
+            image_url: 'https://via.placeholder.com/250',
+            overview: 'This was a great movie. Go see it! This is a very short overview of the movie.'
+          },
+          {
+            title: 'The Code Fellows Movie',
+            released_on: 'April 26, 2019',
+            total_votes: '10,000,000',
+            average_votes: '9',
+            popularity: '99%',
+            image_url: 'https://via.placeholder.com/250',
+            overview: 'This was a great movie. Go see it! This is a very short overview of the movie.'
+          }],
+        trails: [
           {
             trail_url: 'www.trail.com',
             name: 'Poopoo Point',
@@ -109,40 +110,31 @@ class App extends React.Component {
     };
   }
 
-  // renderColumns = () => {
-  //   Object.keys(this.state.data).map((type, idx) => <Column key={idx} type={type} data={this.state.data[type]} />);
-  // };
+  newSearch = async (query) => {
+    // Get lat, long, & formatted query from Google geocode API
+    let location = await fetchLocation(query);
 
-  handleSubmit = async (query) => {
-    // get lat, long, & formatted query from Google geocode API
-    let location = await getLocation(query);
-    console.log('location in app.js', location);
-
-    // Update the "here are the results for __" and map in the DOM
+    // Update state for map and "here are the results for ____"
     this.setState({
       initialView: false,
       query: location.formatted_query,
       map_url: mapURL(location)
     });
 
-    console.log(this.state);
+    // Send all the requests out to the 3rd-party APIs
+    let data = await fetchResources(location);
 
-
-    // this.setState({map_url: mapURL(location)});
-
-    // .then(data => this.setState({data}))
-    // .catch(err => console.err('ERROR in fetchCityData'))
+    // Update state with new data from 3rd-party APIs
+    this.setState({data});
   }
 
-
   render() {
-    // this.renderColumns(this.state.data);
     return (
       <>
         <Header />
         <main>
           <URLForm />
-          <SearchForm handleQuery={this.handleSubmit} />
+          <SearchForm returnQuery={this.newSearch} />
           <Map hide={this.state.initialView} url={this.state.map_url} />
           <Error />
           <QueryPlaceholder hide={this.state.initialView} query={this.state.query} />

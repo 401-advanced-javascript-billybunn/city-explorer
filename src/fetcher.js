@@ -1,46 +1,50 @@
-// runs when "Explore" button is clicked
+import superagent from 'superagent';
 
-// require('dotenv').config;
+// City Explorer back-end
+let __API_URL__ = 'https://city-explorer-backend.herokuapp.com';
+// let __API_URL__ = 'https://obscure-bayou-17929.herokuapp.com';
 
-// let __API_URL__ = "https://city-explorer-backend.herokuapp.com";
-let __API_URL__ = 'https://obscure-bayou-17929.herokuapp.com';
+// Restricted API key for Google geolocation services
 let GOOGLE_MAPS_API_KEY = 'AIzaSyD7ec2NYqouYl7xDapeBorUXKXqYjJV_S8';
 
-const getLocation = (searchQuery) => {
-  // How to set params with fetch: https://fetch.spec.whatwg.org/#fetch-api
-  let url = new URL(__API_URL__ + '/location'),
-    params = { data: searchQuery };
-  Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+// Endpoints to City Explorer back-end
+// IMPORTANT: the file names in 'src/components/column-details' must match these
+// e.g., "weather-details.js", "yelp-details.js", etc.
+const resources = ['weather', 'yelp', 'meetups', 'movies', 'trails'];
 
-  return fetch(url).then(results => results.json())
-    .catch(err => console.log('error in api handler', err));
+// Sends a GET request to the City Explorer back-end
+// Returns a location object with a formatted_query, latitude, & longitude
+const fetchLocation = async (searchQuery) => {
+  let url = `${__API_URL__}/location?${searchQuery}`;
+  let results = await superagent(url).query({ data: searchQuery });
+  return results.body;
 };
 
+// Constructs a src URL for the Google map img with a given lat & long
 const mapURL = (location) => {
   return `https://maps.googleapis.com/maps/api/staticmap?center=${location.latitude}%2c%20${location.longitude}&zoom=13&size=600x300&maptype=roadmap
   &key=${GOOGLE_MAPS_API_KEY}`;
-
-  // return new Promise((resolve, reject) => {
-
-  // resolve(map_url);
-
-  // });
-
 };
 
-// .then(location =>)
+// Sends GET requests to City Explorer back-end
+// Returns a formatted object of results from 3rd-pary API resouces
+const fetchResources = async (location) => {
+  // Create an array of GET requests for all resources
+  let urls = resources.map(resource => `${__API_URL__}/${resource}`);
+  let dataRequests = urls.map(url => {
+    return superagent.get(url).query({ data: location });
+  });
 
-// display the map and unhide everything else
-// call all the other API's using promise.all
-// process the results from each API
-// send a pretty object back to App.js so it can update its state
+  // Sends all requests at simultaneously, returns an array of results in-order
+  let results = await Promise.all(dataRequests);
 
+  // Formats results into object with a name & respective response.body for each resource
+  let data = results.reduce((acc, result, idx) => {
+    acc[resources[idx]] = result.body;
+    return acc;
+  }, {});
 
-function getResources(location) {
-  // INPUT <-- location data object
-  // OUTPUT --> data for each
-}
+  return data;
+};
 
-
-export { getLocation, mapURL };
-
+export { fetchLocation, mapURL, fetchResources };

@@ -3,7 +3,7 @@ import React from 'react';
 function SearchForm(props) {
   const handleNewSearch = (e) => {
     e.preventDefault();
-    props.handleQuery(e.target[0].value);
+    props.returnQuery(e.target[0].value);
   };
 
   return (
