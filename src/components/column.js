@@ -2,7 +2,6 @@ import React, { Suspense } from 'react';
 // https://reactjs.org/docs/code-splitting.html
 
 function Column(props) {
-  console.log('column.js')
   const type = props.type;
   const Details = React.lazy(() => import(`./column-details/${type}-details.js`));
 

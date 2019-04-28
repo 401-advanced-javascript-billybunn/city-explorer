@@ -1,7 +1,5 @@
 import React from 'react';
 
-
-
 function SearchForm(props) {
   const handleNewSearch = (e) => {
     e.preventDefault();

@@ -6,6 +6,7 @@ import SearchForm from './components/search-form.js';
 import Map from './components/map.js';
 import Error from './components/error.js';
 import Column from './components/column.js';
+import fetchCityData from './api-handler.js';
 
 
 class App extends React.Component {
@@ -113,6 +114,9 @@ class App extends React.Component {
 
   handleSubmit = (query) => {
     this.setState({query});
+    fetchCityData(query);
+      // .then(data => this.setState({data}))
+      // .catch(err => console.err('ERROR in fetchCityData'))
   }
 
 
