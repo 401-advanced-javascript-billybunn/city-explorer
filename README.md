@@ -26,8 +26,8 @@
 ### Links and Resources
 * [PR][1]
 * [travis][2]
-* [back-end][3]
-* [front-end][4]
+* [provided back-end server][3]
+* [deployed front-end app (Netlify)][4]
 
 <!-- #### Documentation -->
 <!-- * [Styleguidist]() -->
